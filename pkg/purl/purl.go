@@ -442,12 +442,14 @@ func parseJulia(pkgName, pkgUUID string) (string, string, packageurl.Qualifiers)
 
 func purlType(t ftypes.TargetType) string {
 	switch t {
-	case ftypes.Jar, ftypes.Pom, ftypes.Gradle:
+	case ftypes.Jar, ftypes.Pom, ftypes.Gradle, ftypes.Sbt:
 		return packageurl.TypeMaven
 	case ftypes.Bundler, ftypes.GemSpec:
 		return packageurl.TypeGem
 	case ftypes.NuGet, ftypes.DotNetCore, ftypes.PackagesProps:
 		return packageurl.TypeNuget
+	case ftypes.Composer, ftypes.ComposerVendor:
+		return packageurl.TypeComposer
 	case ftypes.CondaPkg, ftypes.CondaEnv:
 		return packageurl.TypeConda
 	case ftypes.PythonPkg, ftypes.Pip, ftypes.Pipenv, ftypes.Poetry:
