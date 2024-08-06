@@ -25,6 +25,10 @@ trivy sbom [flags] SBOM_PATH
       --compliance string           compliance report to generate
       --custom-headers strings      custom headers in client mode
       --db-repository string        OCI repository to retrieve trivy-db from (default "ghcr.io/aquasecurity/trivy-db:2")
+      --detection-priority string   specify the detection priority:
+                                      - "precise": Prioritizes precise by minimizing false positives.
+                                      - "comprehensive": Aims to detect more security findings at the cost of potential false positives.
+                                     (precise,comprehensive) (default "precise")
       --download-db-only            download/update vulnerability database but don't run a scan
       --download-java-db-only       download/update Java index database but don't run a scan
       --exit-code int               specify exit code when any security issues are found
@@ -63,7 +67,7 @@ trivy sbom [flags] SBOM_PATH
   -t, --template string             output template
       --token string                for authentication in client/server mode
       --token-header string         specify a header name for token in client/server mode (default "Trivy-Token")
-      --vex strings                 [EXPERIMENTAL] VEX sources ("repo" or file path)
+      --vex strings                 [EXPERIMENTAL] VEX sources ("repo", "oci" or file path)
 ```
 
 ### Options inherited from parent commands

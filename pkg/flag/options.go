@@ -196,6 +196,14 @@ func (f *Flag[T]) GetName() string {
 	return f.Name
 }
 
+func (f *Flag[T]) GetConfigName() string {
+	return f.ConfigName
+}
+
+func (f *Flag[T]) GetDefaultValue() any {
+	return f.Default
+}
+
 func (f *Flag[T]) GetAliases() []Alias {
 	return f.Aliases
 }
@@ -302,6 +310,8 @@ type FlagGroup interface {
 
 type Flagger interface {
 	GetName() string
+	GetConfigName() string
+	GetDefaultValue() any
 	GetAliases() []Alias
 
 	Parse() error
@@ -326,7 +336,6 @@ type Flags struct {
 	RegoFlagGroup          *RegoFlagGroup
 	RepoFlagGroup          *RepoFlagGroup
 	ReportFlagGroup        *ReportFlagGroup
-	SBOMFlagGroup          *SBOMFlagGroup
 	ScanFlagGroup          *ScanFlagGroup
 	SecretFlagGroup        *SecretFlagGroup
 	VulnerabilityFlagGroup *VulnerabilityFlagGroup
@@ -350,7 +359,6 @@ type Options struct {
 	RemoteOptions
 	RepoOptions
 	ReportOptions
-	SBOMOptions
 	ScanOptions
 	SecretOptions
 	VulnerabilityOptions
@@ -548,9 +556,6 @@ func (f *Flags) groups() []FlagGroup {
 	}
 	if f.ImageFlagGroup != nil {
 		groups = append(groups, f.ImageFlagGroup)
-	}
-	if f.SBOMFlagGroup != nil {
-		groups = append(groups, f.SBOMFlagGroup)
 	}
 	if f.VulnerabilityFlagGroup != nil {
 		groups = append(groups, f.VulnerabilityFlagGroup)
@@ -757,13 +762,6 @@ func (f *Flags) ToOptions(args []string) (Options, error) {
 		opts.ReportOptions, err = f.ReportFlagGroup.ToOptions()
 		if err != nil {
 			return Options{}, xerrors.Errorf("report flag error: %w", err)
-		}
-	}
-
-	if f.SBOMFlagGroup != nil {
-		opts.SBOMOptions, err = f.SBOMFlagGroup.ToOptions()
-		if err != nil {
-			return Options{}, xerrors.Errorf("sbom flag error: %w", err)
 		}
 	}
 
