@@ -7,11 +7,13 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/yaml.v3"
 
 	"github.com/aquasecurity/trivy/pkg/iac/scanners/azure/arm/parser/armjson"
 	"github.com/aquasecurity/trivy/pkg/iac/scanners/terraformplan/snapshot"
 	"github.com/aquasecurity/trivy/pkg/iac/types"
+	"github.com/aquasecurity/trivy/pkg/log"
 )
 
 type FileType string
@@ -33,25 +35,24 @@ const (
 
 var matchers = make(map[FileType]func(name string, r io.ReadSeeker) bool)
 
+// TODO(nikita): refactor. If the file matches the schema, it no longer needs to be checked for other scanners.
 // nolint
 func init() {
 
 	matchers[FileTypeJSON] = func(name string, r io.ReadSeeker) bool {
-		ext := filepath.Ext(filepath.Base(name))
-		if !strings.EqualFold(ext, ".json") {
+		if !isJSON(name) {
 			return false
 		}
 		if resetReader(r) == nil {
 			return true
 		}
 
-		var content any
-		return json.NewDecoder(r).Decode(&content) == nil
+		b, err := io.ReadAll(r)
+		return err == nil && json.Valid(b)
 	}
 
 	matchers[FileTypeYAML] = func(name string, r io.ReadSeeker) bool {
-		ext := filepath.Ext(filepath.Base(name))
-		if !strings.EqualFold(ext, ".yaml") && !strings.EqualFold(ext, ".yml") {
+		if !isYAML(name) {
 			return false
 		}
 		if resetReader(r) == nil {
@@ -221,15 +222,15 @@ func init() {
 		}
 		data := buf.Bytes()
 
-		marker := "\n---\n"
-		altMarker := "\r\n---\r\n"
-		if bytes.Contains(data, []byte(altMarker)) {
+		marker := []byte("\n---\n")
+		altMarker := []byte("\r\n---\r\n")
+		if bytes.Contains(data, altMarker) {
 			marker = altMarker
 		}
 
-		for _, partial := range strings.Split(string(data), marker) {
+		for _, partial := range bytes.Split(data, marker) {
 			var result map[string]any
-			if err := yaml.Unmarshal([]byte(partial), &result); err != nil {
+			if err := yaml.Unmarshal(partial, &result); err != nil {
 				continue
 			}
 			match := true
@@ -308,4 +309,43 @@ func resetReader(r io.Reader) io.ReadSeeker {
 		return seeker
 	}
 	return ensureSeeker(r)
+}
+
+func isJSON(name string) bool {
+	ext := filepath.Ext(name)
+	return strings.EqualFold(ext, ".json")
+}
+func isYAML(name string) bool {
+	ext := filepath.Ext(name)
+	return strings.EqualFold(ext, ".yaml") || strings.EqualFold(ext, ".yml")
+}
+
+func IsFileMatchesSchemas(schemas map[string]*gojsonschema.Schema, typ FileType, name string, r io.ReadSeeker) bool {
+	defer resetReader(r)
+
+	var l gojsonschema.JSONLoader
+	switch {
+	case typ == FileTypeJSON && isJSON(name):
+		b, err := io.ReadAll(r)
+		if err != nil {
+			return false
+		}
+		l = gojsonschema.NewBytesLoader(b)
+	case typ == FileTypeYAML && isYAML(name):
+		var content any
+		if err := yaml.NewDecoder(r).Decode(&content); err != nil {
+			return false
+		}
+		l = gojsonschema.NewGoLoader(content)
+	default:
+		return false
+	}
+
+	for schemaPath, schema := range schemas {
+		if res, err := schema.Validate(l); err == nil && res.Valid() {
+			log.Debug("File matched schema", log.FilePath(name), log.String("schema_path", schemaPath))
+			return true
+		}
+	}
+	return false
 }
