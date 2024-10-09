@@ -37,7 +37,7 @@ trivy image [flags] IMAGE_NAME
       --cache-backend string              [EXPERIMENTAL] cache backend (e.g. redis://localhost:6379) (default "fs")
       --cache-ttl duration                cache TTL when using redis as cache backend
       --check-namespaces strings          Rego namespaces
-      --checks-bundle-repository string   OCI registry URL to retrieve checks bundle from (default "ghcr.io/aquasecurity/trivy-checks:0")
+      --checks-bundle-repository string   OCI registry URL to retrieve checks bundle from (default "ghcr.io/aquasecurity/trivy-checks:1")
       --compliance string                 compliance report to generate (docker-cis-1.6.0)
       --config-check strings              specify the paths to the Rego check files or to the directories containing them, applying config files
       --config-data strings               specify paths from which data for the Rego checks will be recursively loaded
@@ -71,7 +71,7 @@ trivy image [flags] IMAGE_NAME
       --ignorefile string                 specify .trivyignore file (default ".trivyignore")
       --image-config-scanners strings     comma-separated list of what security issues to detect on container image configurations (misconfig,secret)
       --image-src strings                 image source(s) to use, in priority order (docker,containerd,podman,remote) (default [docker,containerd,podman,remote])
-      --include-deprecated-checks         include deprecated checks (default true)
+      --include-deprecated-checks         include deprecated checks
       --include-non-failures              include successes and exceptions, available with '--scanners misconfig'
       --input string                      input file path instead of image name
       --java-db-repository strings        OCI repository(ies) to retrieve trivy-java-db in order of priority (default [ghcr.io/aquasecurity/trivy-java-db:1])

@@ -26,7 +26,7 @@ trivy rootfs [flags] ROOTDIR
       --cache-ttl duration                cache TTL when using redis as cache backend
       --cf-params strings                 specify paths to override the CloudFormation parameters files
       --check-namespaces strings          Rego namespaces
-      --checks-bundle-repository string   OCI registry URL to retrieve checks bundle from (default "ghcr.io/aquasecurity/trivy-checks:0")
+      --checks-bundle-repository string   OCI registry URL to retrieve checks bundle from (default "ghcr.io/aquasecurity/trivy-checks:1")
       --config-check strings              specify the paths to the Rego check files or to the directories containing them, applying config files
       --config-data strings               specify paths from which data for the Rego checks will be recursively loaded
       --config-file-schemas strings       specify paths to JSON configuration file schemas to determine that a file matches some configuration and pass the schema to Rego checks for type checking
@@ -56,7 +56,7 @@ trivy rootfs [flags] ROOTDIR
       --ignore-unfixed                    display only fixed vulnerabilities
       --ignored-licenses strings          specify a list of license to ignore
       --ignorefile string                 specify .trivyignore file (default ".trivyignore")
-      --include-deprecated-checks         include deprecated checks (default true)
+      --include-deprecated-checks         include deprecated checks
       --include-non-failures              include successes and exceptions, available with '--scanners misconfig'
       --java-db-repository strings        OCI repository(ies) to retrieve trivy-java-db in order of priority (default [ghcr.io/aquasecurity/trivy-java-db:1])
       --license-confidence-level float    specify license classifier's confidence level (default 0.9)
