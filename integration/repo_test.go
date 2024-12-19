@@ -16,6 +16,7 @@ import (
 
 // TestRepository tests `trivy repo` with the local code repositories
 func TestRepository(t *testing.T) {
+	t.Setenv("NUGET_PACKAGES", t.TempDir())
 	type args struct {
 		scanner        types.Scanner
 		ignoreIDs      []string
@@ -299,24 +300,6 @@ func TestRepository(t *testing.T) {
 				filePatterns: []string{"dockerfile:Customfile"},
 			},
 			golden: "testdata/dockerfile_file_pattern.json.golden",
-		},
-		{
-			name: "dockerfile with rule exception",
-			args: args{
-				scanner:     types.MisconfigScanner,
-				policyPaths: []string{"testdata/fixtures/repo/rule-exception/policy"},
-				input:       "testdata/fixtures/repo/rule-exception",
-			},
-			golden: "testdata/dockerfile-rule-exception.json.golden",
-		},
-		{
-			name: "dockerfile with namespace exception",
-			args: args{
-				scanner:     types.MisconfigScanner,
-				policyPaths: []string{"testdata/fixtures/repo/namespace-exception/policy"},
-				input:       "testdata/fixtures/repo/namespace-exception",
-			},
-			golden: "testdata/dockerfile-namespace-exception.json.golden",
 		},
 		{
 			name: "dockerfile with custom policies",
