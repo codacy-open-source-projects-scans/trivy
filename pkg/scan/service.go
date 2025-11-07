@@ -77,9 +77,14 @@ func (s Service) ScanArtifact(ctx context.Context, options types.ScanOptions) (t
 		scanResponse.Layers[i].CreatedBy = ""
 	}
 
+	reportID, err := uuid.NewV7()
+	if err != nil {
+		return types.Report{}, xerrors.Errorf("failed to generate ReportID: %w", err)
+	}
+
 	return types.Report{
 		SchemaVersion: report.SchemaVersion,
-		ReportID:      uuid.New().String(),
+		ReportID:      reportID.String(),
 		CreatedAt:     clock.Now(ctx),
 		ArtifactID:    s.generateArtifactID(artifactInfo),
 		ArtifactName:  artifactInfo.Name,
@@ -92,6 +97,7 @@ func (s Service) ScanArtifact(ctx context.Context, options types.ScanOptions) (t
 			DiffIDs:     artifactInfo.ImageMetadata.DiffIDs,
 			RepoTags:    artifactInfo.ImageMetadata.RepoTags,
 			RepoDigests: artifactInfo.ImageMetadata.RepoDigests,
+			Reference:   artifactInfo.ImageMetadata.Reference,
 			ImageConfig: artifactInfo.ImageMetadata.ConfigFile,
 			Size:        scanResponse.Layers.TotalSize(),
 			Layers:      lo.Ternary(len(scanResponse.Layers) > 0, scanResponse.Layers, nil),
@@ -125,7 +131,7 @@ func (s Service) generateArtifactID(artifactInfo artifact.Reference) string {
 
 		// Use the Reference field if available
 		ref := artifactInfo.ImageMetadata.Reference
-		if ref.IsEmpty() {
+		if ref.IsZero() {
 			// Reference is empty when RepoTags and RepoDigests are both empty.
 			// This happens in the following cases:
 			// 1. Images built without tags (e.g., "docker build ." without -t flag)

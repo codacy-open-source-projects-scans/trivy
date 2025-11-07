@@ -1,6 +1,6 @@
 {
   "SchemaVersion": 2,
-  "ReportID": "3ff14136-e09f-4df9-80ea-000000000001",
+  "ReportID": "017b7d41-e09f-7000-80ea-000000000001",
   "CreatedAt": "2021-08-25T12:20:30.000000005Z",
   "ArtifactID": "sha256:87e7ebcf8b5c0a26985fd80875e09e11850fa4828e1156da190f85b17dcecb71",
   "ArtifactName": "testdata/fixtures/images/amazon-2.tar.gz",
@@ -18,6 +18,7 @@
     "RepoTags": [
       "ghcr.io/aquasecurity/trivy-test-images:amazon-2"
     ],
+    "Reference": "ghcr.io/aquasecurity/trivy-test-images:amazon-2",
     "ImageConfig": {
       "architecture": "amd64",
       "container": "e020a5508b9f809b29659128692cd634e3d4fba3f2c13d2029d797317b5c3a56",
