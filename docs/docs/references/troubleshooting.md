@@ -10,7 +10,7 @@
     analyze error: timeout: context deadline exceeded
     ```
 
-Your scan may time out. Java takes a particularly long time to scan. Try increasing the value of the ---timeout option such as `--timeout 15m`.
+Your scan may time out. Java takes a particularly long time to scan. Try increasing the value of the `--timeout` option such as `--timeout 15m`.
 
 ### Unable to initialize an image scanner
 
@@ -78,15 +78,27 @@ Common mistakes include the following, depending on where you are pulling images
 $ TRIVY_INSECURE=true trivy image [YOUR_IMAGE]
 ```
 
-On Unix systems other than macOS, you can specify the location of your certificate using `SSL_CERT_FILE` or `SSL_CERT_DIR` environment variables.
+If you need to trust a custom CA certificate, you can provide a PEM-encoded bundle.
 
-```
-$ SSL_CERT_FILE=/path/to/cert trivy image [YOUR_IMAGE]
-```
+=== "Unix (except macOS)"
 
-```
-$ SSL_CERT_DIR=/path/to/certs trivy image [YOUR_IMAGE]
-```
+    You can specify the location of your certificate using the `SSL_CERT_FILE` or `SSL_CERT_DIR` environment variables.
+
+    ```bash
+    $ SSL_CERT_FILE=/path/to/ca.pem trivy image [YOUR_IMAGE]
+    ```
+
+    ```bash
+    $ SSL_CERT_DIR=/path/to/certs trivy image [YOUR_IMAGE]
+    ```
+
+=== "All systems"
+
+    Use the `--cacert` flag to point Trivy to a PEM-encoded CA certificate file, regardless of the operating system.
+
+    ```bash
+    $ trivy image --cacert /path/to/ca.pem [YOUR_IMAGE]
+    ```
 
 ### GitHub Rate limiting
 Trivy uses GitHub API for [VEX repositories](../supply-chain/vex/repo.md).
