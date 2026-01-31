@@ -496,31 +496,47 @@ func TestPom_Parse(t *testing.T) {
 				},
 			},
 		},
+		// [INFO] com.example:child:jar:1.2.3
+		// [INFO] +- org.example:example-dependency:jar:1.2.3:compile
+		// [INFO] |  \- org.example:example-api:jar:4.0.0:compile
+		// [INFO] \- org.example:example-api3:jar:4.0.3:compile
 		{
 			name:      "dependencyManagement prefers child properties",
-			inputFile: filepath.Join("testdata", "parent-child-properties", "child", "pom.xml"),
+			inputFile: filepath.Join("testdata", "parent-child-properties", "pom.xml"),
 			local:     true,
 			want: []ftypes.Package{
 				{
-					ID:           "com.example:child:1.0.0::b6c336a6",
+					ID:           "com.example:child:1.2.3::14cce9f5",
 					Name:         "com.example:child",
-					Version:      "1.0.0",
+					Version:      "1.2.3",
 					Relationship: ftypes.RelationshipRoot,
 				},
 				{
-					ID:           "org.example:example-dependency:1.2.3::60fa7625",
+					ID:           "org.example:example-api3:4.0.3::c4062c26",
+					Name:         "org.example:example-api3",
+					Version:      "4.0.3",
+					Relationship: ftypes.RelationshipDirect,
+					Locations: ftypes.Locations{
+						{
+							StartLine: 30,
+							EndLine:   34,
+						},
+					},
+				},
+				{
+					ID:           "org.example:example-dependency:1.2.3::d1f3e5ff",
 					Name:         "org.example:example-dependency",
 					Version:      "1.2.3",
 					Relationship: ftypes.RelationshipDirect,
 					Locations: ftypes.Locations{
 						{
-							StartLine: 22,
-							EndLine:   26,
+							StartLine: 25,
+							EndLine:   29,
 						},
 					},
 				},
 				{
-					ID:           "org.example:example-api:4.0.0::221fee5d",
+					ID:           "org.example:example-api:4.0.0::daf5884b",
 					Name:         "org.example:example-api",
 					Version:      "4.0.0",
 					Relationship: ftypes.RelationshipIndirect,
@@ -528,15 +544,16 @@ func TestPom_Parse(t *testing.T) {
 			},
 			wantDeps: []ftypes.Dependency{
 				{
-					ID: "com.example:child:1.0.0::b6c336a6",
+					ID: "com.example:child:1.2.3::14cce9f5",
 					DependsOn: []string{
-						"org.example:example-dependency:1.2.3::60fa7625",
+						"org.example:example-api3:4.0.3::c4062c26",
+						"org.example:example-dependency:1.2.3::d1f3e5ff",
 					},
 				},
 				{
-					ID: "org.example:example-dependency:1.2.3::60fa7625",
+					ID: "org.example:example-dependency:1.2.3::d1f3e5ff",
 					DependsOn: []string{
-						"org.example:example-api:4.0.0::221fee5d",
+						"org.example:example-api:4.0.0::daf5884b",
 					},
 				},
 			},
@@ -1157,8 +1174,12 @@ func TestPom_Parse(t *testing.T) {
 		// [INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ child ---
 		// [INFO] com.example:child:jar:3.0.0
 		// [INFO] \- org.example:example-exclusions:jar:3.0.0:compile
-		// [INFO]    \- org.example:example-nested:jar:3.3.3:compile
+		// [INFO]    \- org.example:example-nested:jar:3.3.5:compile
 		// [INFO] ------------------------------------------------------------------------
+		// org.example:example-dependency is excluded via com.example:child (dependencies)
+		// org.example:example-dependency2 is excluded via com.example:parent (dependencyManagement)
+		// org.example:example-api2 is excluded via org.example:example-exclusions (dependencies)
+		// org.example:example-api3 is excluded via com.example:parent (dependencyManagement)
 		{
 			name:      "exclusions in child and parent dependency management",
 			inputFile: filepath.Join("testdata", "exclusions-parent-dependency-management", "child", "pom.xml"),
@@ -1184,9 +1205,9 @@ func TestPom_Parse(t *testing.T) {
 					},
 				},
 				{
-					ID:           "org.example:example-nested:3.3.3::39880dca",
+					ID:           "org.example:example-nested:3.3.5::c5a28f33",
 					Name:         "org.example:example-nested",
-					Version:      "3.3.3",
+					Version:      "3.3.5",
 					Relationship: ftypes.RelationshipIndirect,
 				},
 			},
@@ -1200,7 +1221,7 @@ func TestPom_Parse(t *testing.T) {
 				{
 					ID: "org.example:example-exclusions:3.0.0::1e4e34b7",
 					DependsOn: []string{
-						"org.example:example-nested:3.3.3::39880dca",
+						"org.example:example-nested:3.3.5::c5a28f33",
 					},
 				},
 			},
