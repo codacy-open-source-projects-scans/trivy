@@ -21,7 +21,7 @@ require (
 	github.com/aquasecurity/go-version v0.0.1
 	github.com/aquasecurity/iamgo v0.0.10
 	github.com/aquasecurity/table v1.11.0
-	github.com/aquasecurity/testdocker v0.0.0-20250616060700-ba6845ac6d17
+	github.com/aquasecurity/testdocker v0.0.0-20260423080828-99e7cbfdbe56
 	github.com/aquasecurity/tml v0.6.1
 	github.com/aquasecurity/trivy-checks v1.12.2-0.20251219190323-79d27547baf5
 	github.com/aquasecurity/trivy-db v0.0.0-20251222105351-a833f47f8f0d
@@ -48,7 +48,7 @@ require (
 	github.com/go-viper/mapstructure/v2 v2.5.0
 	github.com/gocsaf/csaf/v3 v3.5.1
 	github.com/golang-jwt/jwt/v5 v5.3.1
-	github.com/google/go-containerregistry v0.21.2
+	github.com/google/go-containerregistry v0.21.4
 	github.com/google/go-github/v62 v62.0.0
 	github.com/google/jsonschema-go v0.4.2
 	github.com/google/licenseclassifier/v2 v2.0.0
@@ -70,14 +70,14 @@ require (
 	github.com/knqyf263/nested v0.0.1
 	github.com/kylelemons/godebug v1.1.0
 	github.com/magefile/mage v1.17.1
-	github.com/masahiro331/go-disk v0.0.0-20240625071113-56c933208fee
-	github.com/masahiro331/go-ebs-file v0.0.0-20240917043618-e6d2bea5c32e
-	github.com/masahiro331/go-ext4-filesystem v0.0.0-20240620024024-ca14e6327bbd
+	github.com/masahiro331/go-disk v0.0.0-20260423015231-f7a470ebd472
+	github.com/masahiro331/go-ebs-file v0.0.0-20260422020928-9d24e29aac27
+	github.com/masahiro331/go-ext4-filesystem v0.0.0-20260423010602-fe51f5b5e52b
 	github.com/masahiro331/go-mvn-version v0.0.0-20250131095131-f4974fa13b8a
-	github.com/masahiro331/go-vmdk-parser v0.0.0-20221225061455-612096e4bbbd
-	github.com/masahiro331/go-xfs-filesystem v0.0.0-20231205045356-1b22259a6c44
+	github.com/masahiro331/go-vmdk-parser v0.0.0-20260423020818-08305fa668d2
+	github.com/masahiro331/go-xfs-filesystem v0.0.0-20260422061116-d21e5e4481bb
 	github.com/mattn/go-shellwords v1.0.12
-	github.com/mitchellh/go-homedir v1.1.0
+	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2
 	github.com/moby/buildkit v0.29.0
 	github.com/moby/docker-image-spec v1.3.1
@@ -131,9 +131,9 @@ require (
 )
 
 require (
-	github.com/go-ini/ini v1.67.0
 	github.com/moby/moby/api v1.54.1
 	github.com/nikolalohinski/gonja/v2 v2.7.0
+	gopkg.in/ini.v1 v1.67.1
 )
 
 require (
